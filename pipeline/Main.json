@@ -1,0 +1,49 @@
+{
+	"name": "Main",
+	"properties": {
+		"activities": [
+			{
+				"name": "Load ElectricVehicles",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Load_ElectricVehicles",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Load DimState",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Load ElectricVehicles",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Load_ElectricVehicles",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2024-11-26T12:45:06Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

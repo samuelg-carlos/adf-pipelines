@@ -1,0 +1,9 @@
+{
+	"name": "adf-dev-csg-01",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "1528d77a-bbac-4399-b753-0aba69d86313",
+		"tenantId": "47dc4d59-cc74-4ee3-996c-487a1678d0cd"
+	}
+}

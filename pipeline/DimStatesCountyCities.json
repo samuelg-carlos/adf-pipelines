@@ -1,0 +1,110 @@
+{
+	"name": "DimStatesCountyCities",
+	"properties": {
+		"activities": [
+			{
+				"name": "Staging StatesCountyCities",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT\n    DISTINCT [State] \n    ,[County]\n    ,[City]\n  FROM [staging].[ElectricVehicles]\n  WHERE \n    [City] IS NOT NULL\n  ORDER BY\n    [State];",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"preCopyScript": "TRUNCATE TABLE [staging].[StatesCountyCities];",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false,
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false,
+					"parallelCopies": 1,
+					"dataIntegrationUnits": 4,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "State",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "State",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "County",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "County",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "City",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "City",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "az_sql_electric_vehicle",
+						"type": "DatasetReference",
+						"parameters": {
+							"pSchema": "staging",
+							"pTableName": "ElectricVehicles"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "az_sql_electric_vehicle",
+						"type": "DatasetReference",
+						"parameters": {
+							"pSchema": "staging",
+							"pTableName": "StatesCountyCities"
+						}
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "Dimensions"
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-11-26T12:49:01Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
