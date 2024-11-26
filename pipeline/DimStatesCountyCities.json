@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Staging States",
+				"name": "Staging StatesCountyCities",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
