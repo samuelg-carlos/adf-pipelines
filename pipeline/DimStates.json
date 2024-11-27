@@ -1,0 +1,95 @@
+{
+	"name": "DimStates",
+	"properties": {
+		"activities": [
+			{
+				"name": "Staging States",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT\n    [State]\n    ,COUNT([State]) AS CountByState\n  FROM [staging].[ElectricVehicles]\n  WHERE \n    [City] IS NOT NULL\n  GROUP BY\n    [State]\n  ORDER BY\n    [State] ASC;",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false,
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false,
+					"parallelCopies": 1,
+					"dataIntegrationUnits": 4,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "State",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "State",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CountByState",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "CountByState",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "az_sql_electric_vehicle",
+						"type": "DatasetReference",
+						"parameters": {
+							"pSchema": "na",
+							"pTableName": "na"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "az_sql_electric_vehicle",
+						"type": "DatasetReference",
+						"parameters": {
+							"pSchema": "staging",
+							"pTableName": "States"
+						}
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "Dimensions"
+		},
+		"annotations": []
+	}
+}
